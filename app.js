@@ -28,7 +28,7 @@ app.use(express.json())
 app.use(cors())
 app.use(logger('dev'))
 
-app.use('/login', loginRouter)
+app.use('/login', loginRouter) 
 app.use('/users', userRouter)
 app.use('/reset-password', resetPasswordRouter)
 app.use('/update-password', updatePasswordRouter)
