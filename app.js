@@ -23,7 +23,7 @@ mongoose
         console.log('Error connecting to MongoDB:', error.message)
     })
 
-
+console.log("App running");
 app.use(express.json())
 app.use(cors())
 app.use(logger('dev'))
