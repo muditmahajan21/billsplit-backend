@@ -1,7 +1,8 @@
 const resettPasswordRouter = require('express').Router()
 const User = require('../models/user')
 const jwt = require('jsonwebtoken')
-const nodeMailer = require('nodemailer')
+const nodeMailer = require('nodemailer') 
+const mailgunService = require('../services/mailgunService');
 
 resettPasswordRouter.put('/', async (request, response) => {
   try {
@@ -28,42 +29,27 @@ resettPasswordRouter.put('/', async (request, response) => {
         }
       )
 
-      let transporter = nodeMailer.createTransport({
-        host: 'smtp.gmail.com',
-        port: 465,
-        secure: true,
-        auth: {
-          user: process.env.GOOGLE_EMAIL,
-          pass: process.env.GOOGLE_PASSWORD
-        }
-      })
-
       const data = ({
-        from: 'billsplit.service@gmail.com',
-        to: email,
+        email,
         subject: 'Rest Password Link for Bill Split',
         html: `
+                <>
                 <h3> Please click the link below to reset your password <\h3>
-                <a href="http://localhost:3001/update-password/${token}">Reset Password</a>
-            `
+                <a href="http://localhost:3000/update-password/${token}">Reset Password</a>
+                </>
+                `
       })
 
-      return user.updateOne({ resetLink: token }, (error, user) => {
+      return user.updateOne({ resetLink: token }, async (error, user) => {
         if (error) {
           return response.status(400).json({
             error: 'Reset password link error'
           })
         } else {
-          transporter.sendMail(data, (error, body) => {
-            if (error) {
-              return response.status(400).json({
-                error: error.message
-              })
-            }
-
-            return response.status(200).json({
-              message: 'Reset password link sent successfully'
-            })
+          const res = await mailgunService(data);
+          console.log(res);
+          return response.status(200).json({
+            message: 'Reset password link sent to your email'
           })
         }
       })

@@ -2,8 +2,8 @@ const bcrypt = require('bcrypt')
 const userRouter = require('express').Router()
 const User = require('../models/user')
 const jwt = require('jsonwebtoken')
-const nodemailer = require('nodemailer')
 const validator = require('validator');
+const mailgunService = require('../services/mailgunService');
 
 userRouter.get('/', async (request, response) => {
   try {
@@ -88,37 +88,18 @@ userRouter.post('/', async (request, response) => {
 
     user.save()
 
-    let transporter = nodemailer.createTransport({
-      host: 'smtp.gmail.com',
-      port: 465,
-      secure: true,
-      auth: {
-        user: process.env.GOOGLE_EMAIL,
-        pass: process.env.GOOGLE_PASSWORD
-      }
-    })
-
     const data = ({
-      from: 'billsplit.service@gmail.com',
-      to: email,
+      email: email,
       subject: 'Email Verification for Bill Split',
       html: `
+            <>
             <h3>PLease click the link below to verify your email <\h3>
-            <a href="http://localhost:3001/verify-email?id=${token}">Verify Email</a>
+            <a href="http://localhost:3000/verify-email?id=${token}">Verify Email</a>
+            </>
             `
     })
-
-    let info = transporter.sendMail(data, (error, body) => {
-      if (error) {
-        return response.status(400).json({
-          error: error.message
-        })
-      }
-
-      return response.status(200).json({
-        message: 'Verification link sent successfully'
-      })
-    })
+    
+    await mailgunService(data)
 
     response.json(user)
   } catch (error) {
