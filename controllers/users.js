@@ -111,7 +111,7 @@ userRouter.post('/', async (request, response) => {
       subject: 'Email Verification for Bill Split',
       html: `
         <h3>PLease click the link below to verify your email <\h3>
-        <a href="https://billsplit-backend.cyclic.app/verify-email?id=${token}">Verify Email</a>
+        <a href="https://billsplit-backend.cyclic.app/verify-email?id=${token}">https://billsplit-backend.cyclic.app/verify-email?id=${token}</a>
         `
     })
     
