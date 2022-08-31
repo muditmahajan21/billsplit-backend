@@ -10,7 +10,8 @@ resettPasswordRouter.put('/', async (request, response) => {
 
     User.findOne({ email }, (error, user) => {
       if (error || !user) {
-        return response.status(400).json({
+        return response.status(200).json({
+          status: false,
           error: "No user with this email id exists"
         })
       }
@@ -33,26 +34,29 @@ resettPasswordRouter.put('/', async (request, response) => {
         subject: 'Rest Password Link for Bill Split',
         html: `
           <h3> Please click the link below to reset your password <\h3>
-          <a href="https://billsplit-backend.cyclic.app/update-password/${token}">Reset Password</a>
+          <a href="https://billsplit-backend.cyclic.app/update-password/${token}">https://billsplit-backend.cyclic.app/update-password/${token}</a>
           `
       })
 
       return user.updateOne({ resetLink: token }, async (error, user) => {
         if (error) {
-          return response.status(400).json({
+          return response.status(200).json({
+            status: false,
             error: 'Reset password link error'
           })
         } else {
           const res = await mailgunService(data);
           console.log(res);
           return response.status(200).json({
+            status: true,
             message: 'Reset password link sent to your email'
           })
         }
       })
     })
   } catch (error) {
-    response.status(500).json({
+    response.status(200).json({
+      status: false,
       error: 'Server error'
     })
   }
