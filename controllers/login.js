@@ -13,13 +13,15 @@ loginRouter.post('/', async (request, response) => {
     const passwordCorrect = currUser === null ? false : await bcrypt.compare(password, currUser.passwordHash)
 
     if(!(currUser && passwordCorrect)) {
-      return response.status(401).json({
+      return response.status(200).json({
+        status: false,
         error: 'Invalid username or password' 
       })
     }
     
     if(!currUser.verified) {
-        return response.status(401).json({
+        return response.status(200).json({
+          status: false,
           error: 'User not verified'
       })
     }
@@ -40,9 +42,11 @@ loginRouter.post('/', async (request, response) => {
     currUser.token = token
 
     response.status(200).send({
-      token,
-      email: currUser.email,
-      name: currUser.name,
+      status: true,
+      data: { token,
+        email: currUser.email,
+        name: currUser.name,
+      }
     })
   } catch (error) {
     console.log(error)
