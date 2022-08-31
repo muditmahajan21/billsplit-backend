@@ -117,7 +117,10 @@ userRouter.post('/', async (request, response) => {
     
     await mailgunService(data)
 
-    response.json(user)
+    return response.status(200).json({ 
+      status: true,
+      data: user
+    })
   } catch (error) {
     console.log(error)
     response.status(500).json({
