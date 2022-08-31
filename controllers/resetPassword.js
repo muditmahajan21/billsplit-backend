@@ -12,7 +12,7 @@ resettPasswordRouter.put('/', async (request, response) => {
       if (error || !user) {
         return response.status(200).json({
           status: false,
-          error: "No user with this email id exists"
+          error: error || 'User not found'
         })
       }
 
