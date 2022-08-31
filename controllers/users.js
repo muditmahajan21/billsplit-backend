@@ -94,7 +94,7 @@ userRouter.post('/', async (request, response) => {
       html: `
             <>
             <h3>PLease click the link below to verify your email <\h3>
-            <a href="http://localhost:3000/verify-email?id=${token}">Verify Email</a>
+            <a href="http://localhost:3001/verify-email?id=${token}">Verify Email</a>
             </>
             `
     })

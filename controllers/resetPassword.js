@@ -1,7 +1,6 @@
 const resettPasswordRouter = require('express').Router()
 const User = require('../models/user')
 const jwt = require('jsonwebtoken')
-const nodeMailer = require('nodemailer') 
 const mailgunService = require('../services/mailgunService');
 
 resettPasswordRouter.put('/', async (request, response) => {
@@ -35,7 +34,7 @@ resettPasswordRouter.put('/', async (request, response) => {
         html: `
                 <>
                 <h3> Please click the link below to reset your password <\h3>
-                <a href="http://localhost:3000/update-password/${token}">Reset Password</a>
+                <a href="http://localhost:3001/update-password/${token}">Reset Password</a>
                 </>
                 `
       })
