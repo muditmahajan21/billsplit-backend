@@ -32,11 +32,9 @@ resettPasswordRouter.put('/', async (request, response) => {
         email,
         subject: 'Rest Password Link for Bill Split',
         html: `
-                <>
-                <h3> Please click the link below to reset your password <\h3>
-                <a href="http://localhost:3001/update-password/${token}">Reset Password</a>
-                </>
-                `
+          <h3> Please click the link below to reset your password <\h3>
+          <a href="https://billsplit-backend.cyclic.app/update-password/${token}">Reset Password</a>
+          `
       })
 
       return user.updateOne({ resetLink: token }, async (error, user) => {

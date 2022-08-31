@@ -110,11 +110,9 @@ userRouter.post('/', async (request, response) => {
       email: email,
       subject: 'Email Verification for Bill Split',
       html: `
-            <>
-            <h3>PLease click the link below to verify your email <\h3>
-            <a href="http://localhost:3001/verify-email?id=${token}">Verify Email</a>
-            </>
-            `
+        <h3>PLease click the link below to verify your email <\h3>
+        <a href="https://billsplit-backend.cyclic.app/verify-email?id=${token}">Verify Email</a>
+        `
     })
     
     await mailgunService(data)
