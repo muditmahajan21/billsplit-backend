@@ -34,7 +34,7 @@ app.use('/update-password', updatePasswordRouter)
 app.use('/verify-email', verifyEmailRouter)
 
 app.use('*', (request, response) => {
-  response.json({message: 'Not Valid Url'})
+  response.status(404).json({message: 'Not Valid Url'})
 })
 
 module.exports = app

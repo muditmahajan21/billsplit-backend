@@ -34,31 +34,49 @@ userRouter.post('/', async (request, response) => {
     const { name, password, email, phoneNumber } = request.body
 
     if (!name || !password || !phoneNumber|| !email) {
-      return response.status(400).json({ error: 'Name, Email, Phone Number and Password are required' })
+      return response.status(200).json({ 
+        status: false,
+        error: 'Name, Email, Phone Number and Password are required' 
+      })
     }
 
     if (password.length < 3) {
-      return response.status(400).json({ error: 'Password must be at least 3 characters long' })
+      return response.status(200).json({ 
+        status: false,
+        error: 'Password must be at least 3 characters long' 
+      })
     }
 
     if(!validator.isEmail(email)) {
-      return response.status(400).json({ error: 'Email is invalid' })
+      return response.status(200).json({ 
+        status: false,
+        error: 'Email is invalid' 
+      })
     }
 
     if(!validator.isMobilePhone(phoneNumber)) {
-      return response.status(400).json({ error: 'Phone Number is invalid' })
+      return response.status(200).json({ 
+        status: false,
+        error: 'Phone Number is invalid' 
+      })
     }
 
     let existingUser = await User.find({ email })
 
     if (existingUser.length) {
-      return response.status(400).json({ error: 'User with this email already exists' })
+      return response.status(200).json({ 
+        status: false,
+        error: 'User with this email already exists' 
+      })
     }
 
     existingUser = await User.find({ phoneNumber })
 
     if (existingUser.length) {
-      return response.status(400).json({ error: 'User with this phone number already exists' })
+      return response.status(200).json({ 
+        status: false,
+        error: 'User with this phone number already exists' 
+      })
     }
 
     const saltRounds = 10
