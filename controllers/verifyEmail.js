@@ -9,20 +9,23 @@ verifyEmailRouter.get('/', async (request, response) => {
     if (token) {
       jwt.verify(token, process.env.SECRET, async (error, decodedData) => {
         if (error) {
-          return response.status(400).json({
+          return response.status(200).json({
+            status: false,
             error: 'Invalid token'
           })
         }
 
         const user = await User.findOne({ "token": token })
         if (!user) {
-          return response.status(400).json({
+          return response.status(200).json({
+            status: false,
             error: 'User with this token does not exist'
           })
         }
         user.verified = true
         user.save()
         return response.status(200).json({
+          status: true,
           message: 'Your email has been verified successfully'
         })
       })
