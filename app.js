@@ -10,6 +10,9 @@ const loginRouter = require('./controllers/login')
 const resetPasswordRouter = require('./controllers/resetPassword')
 const updatePasswordRouter = require('./controllers/updatePassword')
 const verifyEmailRouter = require('./controllers/verifyEmail')
+const groupRouter = require('./controllers/groups')
+
+const auth = require('./middleware/auth');
 
 const url = config.MONGODB_URI
 console.log('Connecting to MongoDB')
@@ -32,6 +35,10 @@ app.use('/users', userRouter)
 app.use('/reset-password', resetPasswordRouter)
 app.use('/update-password', updatePasswordRouter)
 app.use('/verify-email', verifyEmailRouter)
+
+app.use(auth)
+app.use('/groups', groupRouter)
+
 
 app.use('*', (request, response) => {
   response.status(404).json({message: 'Not Valid Url'})
