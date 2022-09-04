@@ -3,8 +3,10 @@ const config = process.env
 
 const verifyToken = (request, response, next) => {
   const authorization = request.get('authorization')
-  const token = request.body.token || request.query.token || request.headers["x-access-token"] || authorization.substring(7)
-  
+  const token = request.body.token || request.query.token || request.headers["x-access-token"]
+  if(authorization) {
+    token = authorization.substring(7);
+  }
   if(!token) {
     return response.status(403).send("A token is needed for auth")
   }
