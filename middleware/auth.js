@@ -3,7 +3,7 @@ const config = process.env
 
 const verifyToken = (request, response, next) => {
   const authorization = request.get('authorization')
-  const token = request.body.token || request.query.token || request.headers["x-access-token"]
+  let token = request.body.token || request.query.token || request.headers["x-access-token"]
   if(authorization) {
     token = authorization.substring(7);
   }
