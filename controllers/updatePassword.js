@@ -9,14 +9,16 @@ updatePasswordRouter.put('/', async (request, response) => {
     if (token) {
       jwt.verify(token, process.env.SECRET, (error, decodedData) => {
         if (error) {
-          return response.status(400).json({
+          return response.status(200).json({
+            status: false,
             error: 'Invalid token'
           })
         }
 
         User.findOne({ resetLink: token }, async (error, user) => {
           if (error || !user) {
-            return response.status(400).json({
+            return response.status(200).json({
+              status: false,
               error: 'User with this token does not exist'
             })
           }
@@ -41,11 +43,13 @@ updatePasswordRouter.put('/', async (request, response) => {
 
           user.save((error, result) => {
             if (error) {
-              return response.status(400).json({
+              return response.status(200).json({
+                status: false,
                 error: 'Reset Password failed'
               })
             } else {
               return response.status(200).json({
+                status: true,
                 message: 'Your password has been changed successfully'
               })
             }
@@ -53,8 +57,9 @@ updatePasswordRouter.put('/', async (request, response) => {
         })
       })
     } else {
-      response.status(401).json({
-        error: 'Authentication error'
+      response.status(200).json({
+        status: false,
+        error: 'Invalid token'
       })
     }
   } catch (error) {
