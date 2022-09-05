@@ -7,11 +7,15 @@ const mailgunService = require('../services/mailgunService');
 
 userRouter.get('/', async (request, response) => {
   try {
-    const users = await User.find({})
-    response.json(users.map(user => user.toJSON()))
+    const users = await User.find({});
+    response.status(200).json({
+      status: true,
+      data: users.map(user => user.toJSON())
+    })
   } catch (error) {
     console.log(error)
-    response.status(500).json({
+    response.status(200).json({
+      status: false,
       error: 'Server error'
     })
   }
