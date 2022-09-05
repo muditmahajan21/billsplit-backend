@@ -6,7 +6,10 @@ const validator = require('validator');
 groupRouter.get('/', async (request, response) => {
   try {
     const groups = await Group.find({});
-    response.json(groups.map(group => group.toJSON()));
+    response.status(200).json({
+      status: true,
+      data: groups.map(group => group.toJSON())
+    })
   } catch (error) {
     console.log(error);
     response.status(500).json({
