@@ -1,7 +1,6 @@
 const groupRouter = require('express').Router();
 const Group = require('../models/group');
 const User = require('../models/user');
-const validator = require('validator');
 
 groupRouter.get('/', async (request, response) => {
   try {
