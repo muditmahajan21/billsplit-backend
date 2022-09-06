@@ -41,4 +41,52 @@ billRouter.post("/", async (request, response) => {
   }
 });
 
+billRouter.post("/settle", async (request, response) => {
+  try {
+    const { billId, memberId } = request.body;
+    const bill = await Bill.findById(billId);
+    if(!bill) {
+      return response.status(200).json({
+        status: false,
+        error: 'Bill not found',
+      });
+    }
+    const member = bill.membersShare.find(member => member.member._id.toString() === memberId.toString());
+    if(!member) {
+      return response.status(200).json({
+        status: false,
+        error: 'Member not found',
+      });
+    }
+    else {
+      const settledMember = bill.membersSettled.find(member => member.member._id.toString() === memberId.toString());
+      if(settledMember) {
+        return response.status(200).json({
+          status: false,
+          error: 'Member already settled',
+        });
+      }
+      else {
+        bill.membersSettled.push(member);
+        const paidByMember = bill.membersShare.find(member => member.member._id.toString() === bill.paidBy.toString());
+        bill.membersShare.find(member => member.member._id.toString() === bill.paidBy.toString()).balance = `${Number(paidByMember.balance) + Number(member.balance)}`;
+        bill.membersShare.find(member => member.member._id.toString() === memberId.toString()).balance = `0`;
+      }
+      if(bill.membersSettled.length === bill.membersShare.length - 1) {
+        bill.isSettled = true;
+      }
+      await bill.save();
+      response.status(200).json({
+        status: true,
+        data: bill,
+      });
+    }
+  } catch (error) {
+    console.log(error);
+    response.status(500).json({
+      error: 'Server error',
+    });
+  }
+});
+
 module.exports = billRouter;
