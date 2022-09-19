@@ -17,6 +17,27 @@ groupRouter.get('/', async (request, response) => {
   }
 })
 
+groupRouter.get(`/:id`, async (request, response) => {
+  try {
+    const group = await Group.findById(request.params.id);
+    if (group) {
+      response.status(200).json({
+        status: true,
+        data: group.toJSON()
+      });
+    } else {
+      response.status(404).json({
+        error: 'Group not found'
+      });
+    }
+  } catch (error) {
+    console.log(error);
+    response.status(500).json({
+      error: 'Server error'
+    });
+  }
+})
+
 groupRouter.post('/', async (request, response) => {
   try {
     const { name, description, members } = request.body;

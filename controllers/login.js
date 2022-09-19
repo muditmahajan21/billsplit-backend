@@ -46,6 +46,7 @@ loginRouter.post('/', async (request, response) => {
       data: { token,
         email: currUser.email,
         name: currUser.name,
+        id: currUser._id,
       }
     })
   } catch (error) {

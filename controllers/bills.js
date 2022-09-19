@@ -4,6 +4,28 @@ const User = require('../models/user');
 const Group = require('../models/group');
 const { calculateSplits } = require('../services/billSplitLogic');
 
+billRouter.get('/:memberId', async (request, response) => {
+  try {
+    // All bills that include the id in membersShare
+    const allBills = await Bill.find({}).populate('group', { name: 1, description: 1 }).populate('paidBy', { name: 1, email: 1 });
+    const bills = allBills.filter((bill) => {
+      return bill.membersShare.find((member) => {
+        return member.member._id.toString() === request.params.memberId;
+      });
+    });
+    console.log(bills);
+    response.status(200).json({
+      status: true,
+      data: bills.map(bill => bill.toJSON())
+    });
+  } catch (error) {
+    console.log(error);
+    response.status(500).json({
+      error: 'Server error'
+    });
+  }
+});
+
 billRouter.post("/", async (request, response) => {
   try {
     const { name, description, amount, group, paidBy } = request.body;
