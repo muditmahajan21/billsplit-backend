@@ -19,7 +19,7 @@ groupRouter.get('/', async (request, response) => {
 
 groupRouter.get(`/:id`, async (request, response) => {
   try {
-    const group = await Group.findById(request.params.id);
+    const group = await Group.findById(request.params.id).populate('members', { id: 1, email: 1, name: 1 });
     if (group) {
       response.status(200).json({
         status: true,
